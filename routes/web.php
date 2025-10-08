@@ -16,9 +16,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-    // CRUD Routes
+    // Ruta individual para categories (genera función directa como dashboard)
+    Route::get('categories-list', [CategoryController::class, 'index'])->name('categories');
+
     Route::resource('families', FamilyController::class);
     Route::resource('categories', CategoryController::class);
+    Route::get('/categories/{category}/check-deletion', [CategoryController::class, 'checkDeletion'])->name('categories.check-deletion');
     Route::resource('products', ProductController::class);
     Route::resource('photos', PhotoController::class);
 });

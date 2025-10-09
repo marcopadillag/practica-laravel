@@ -20,6 +20,7 @@ interface Props {
     filters: {
         search?: string;
         family_id?: number | null;
+        per_page?: number;
     };
 }
 

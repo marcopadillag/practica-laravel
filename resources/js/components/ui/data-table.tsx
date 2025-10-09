@@ -23,6 +23,13 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   Table,
   TableBody,
   TableCell,
@@ -85,21 +92,21 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4 gap-2">
-        {searchKey && (
-          <div className="relative flex-1 max-w-sm">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder={searchPlaceholder}
-              value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
-              onChange={(event) =>
-                table.getColumn(searchKey)?.setFilterValue(event.target.value)
-              }
-              className="pl-10"
-            />
-          </div>
-        )}
-        <div className="ml-auto flex items-center gap-2">
+      <div className="flex items-center justify-between py-4 gap-4">
+        <div className="flex items-center gap-2 flex-1">
+          {searchKey && (
+            <div className="relative max-w-sm">
+              <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Input
+                placeholder={searchPlaceholder}
+                value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+                onChange={(event) =>
+                  table.getColumn(searchKey)?.setFilterValue(event.target.value)
+                }
+                className="pl-10"
+              />
+            </div>
+          )}
           {filterOptions && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -107,7 +114,7 @@ export function DataTable<TData, TValue>({
                   {filterOptions.filterLabel} <ChevronDownIcon className="ml-2 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="start">
                 <DropdownMenuCheckboxItem
                   checked={!filterOptions.currentValue}
                   onCheckedChange={() => {
@@ -140,7 +147,7 @@ export function DataTable<TData, TValue>({
                 Columnas <ChevronDownIcon className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="start">
               {table
                 .getAllColumns()
                 .filter((column) => column.getCanHide())
@@ -166,6 +173,32 @@ export function DataTable<TData, TValue>({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+        {pagination && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground whitespace-nowrap">Mostrar</span>
+            <Select
+              value={String(pagination.per_page)}
+              onValueChange={(value) => {
+                const url = new URL(window.location.href);
+                url.searchParams.set('per_page', value);
+                url.searchParams.delete('page'); // Reset to page 1
+                router.get(url.pathname + url.search);
+              }}
+            >
+              <SelectTrigger className="w-[70px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5">5</SelectItem>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="25">25</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+              </SelectContent>
+            </Select>
+            <span className="text-sm text-muted-foreground whitespace-nowrap">registros</span>
+          </div>
+        )}
       </div>
       <div className="rounded-md border">
         <Table>

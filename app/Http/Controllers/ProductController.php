@@ -42,8 +42,11 @@ class ProductController extends Controller
             $query->where('family_id', $request->family_id);
         }
         
-        // Paginación
-        $products = $query->paginate(10)->withQueryString();
+        // Paginación con per_page configurable
+        $perPage = $request->input('per_page', 10);
+        // Validar que per_page sea uno de los valores permitidos
+        $perPage = in_array($perPage, [5, 10, 25, 50, 100]) ? $perPage : 10;
+        $products = $query->paginate($perPage)->withQueryString();
         
         // Agregar la foto de perfil a cada producto usando la relación profilePhoto
         $products->getCollection()->transform(function ($product) {
@@ -58,7 +61,7 @@ class ProductController extends Controller
             'products' => $products,
             'families' => $families,
             'categories' => $categories,
-            'filters' => $request->only(['search', 'family_id'])
+            'filters' => $request->only(['search', 'family_id', 'per_page'])
         ]);
     }
 

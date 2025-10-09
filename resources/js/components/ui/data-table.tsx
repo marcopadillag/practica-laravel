@@ -94,6 +94,11 @@ export function DataTable<TData, TValue>({
               .getAllColumns()
               .filter((column) => column.getCanHide())
               .map((column) => {
+                // Obtener el texto del header
+                const headerText = typeof column.columnDef.header === 'string' 
+                  ? column.columnDef.header 
+                  : column.id
+                
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
@@ -103,7 +108,7 @@ export function DataTable<TData, TValue>({
                       column.toggleVisibility(!!value)
                     }
                   >
-                    {column.id}
+                    {headerText}
                   </DropdownMenuCheckboxItem>
                 )
               })}

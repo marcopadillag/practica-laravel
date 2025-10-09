@@ -79,32 +79,12 @@ export const createColumns = (
   },
   {
     accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Nombre
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: "Nombre",
     cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
   },
   {
     accessorKey: "family",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Familia
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    header: "Familia",
     cell: ({ row }) => {
       const family = row.getValue("family") as { id: number; name: string } | null
       return family ? (

@@ -51,8 +51,21 @@ export const createColumns = (
     onDelete: (product: Product) => void
 ): ColumnDef<Product>[] => [
     {
+        accessorKey: "code",
+        header: "Código",
+        cell: ({ row }) => {
+            const code = row.getValue("code") as string
+            return <Badge variant="outline">{code}</Badge>
+        },
+    },
+    {
+        accessorKey: "name",
+        header: "Nombre",
+        cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
+    },
+    {
         accessorKey: "profile_photo",
-        header: "Foto",
+        header: "Fotos",
         cell: ({ row }) => {
             const product = row.original
             let profilePhoto = product.profile_photo
@@ -89,29 +102,6 @@ export const createColumns = (
                 </div>
             )
         },
-    },
-    {
-        accessorKey: "code",
-        header: "Código",
-        cell: ({ row }) => {
-            const code = row.getValue("code") as string
-            return <Badge variant="outline">{code}</Badge>
-        },
-    },
-    {
-        accessorKey: "name",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Nombre
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-        cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
     },
     {
         accessorKey: "family",

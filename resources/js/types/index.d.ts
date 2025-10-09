@@ -81,6 +81,7 @@ export interface Product {
     family?: Family;
     category?: Category;
     photos?: Photo[];
+    profile_photo?: Photo;
 }
 
 export interface Photo {
@@ -121,5 +122,18 @@ export interface CategoryFormData {
 }
 
 export interface CategoryFilters {
+    search?: string;
+}
+
+export interface ProductFormData {
+    code: string;
+    name: string;
+    price: string;
+    description?: string;
+    family_id?: number;
+    category_id?: number;
+}
+
+export interface ProductFilters {
     search?: string;
 }

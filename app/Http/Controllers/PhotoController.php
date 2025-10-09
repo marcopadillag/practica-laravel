@@ -38,9 +38,16 @@ class PhotoController extends Controller
     {
         $validated = $request->validate([
             'url_photo' => 'required|string|max:255',
-            'profile' => 'nullable|integer',
+            'profile' => 'nullable|integer|in:0,1',
             'product_id' => 'nullable|exists:products,id',
         ]);
+
+        // Si esta foto es marcada como perfil (profile = 1), 
+        // actualizar todas las demás fotos del mismo producto a profile = 0
+        if (isset($validated['profile']) && $validated['profile'] == 1 && isset($validated['product_id'])) {
+            Photo::where('product_id', $validated['product_id'])
+                ->update(['profile' => 0]);
+        }
 
         Photo::create($validated);
 
@@ -75,9 +82,17 @@ class PhotoController extends Controller
     {
         $validated = $request->validate([
             'url_photo' => 'required|string|max:255',
-            'profile' => 'nullable|integer',
+            'profile' => 'nullable|integer|in:0,1',
             'product_id' => 'nullable|exists:products,id',
         ]);
+
+        // Si esta foto es marcada como perfil (profile = 1), 
+        // actualizar todas las demás fotos del mismo producto a profile = 0
+        if (isset($validated['profile']) && $validated['profile'] == 1 && isset($validated['product_id'])) {
+            Photo::where('product_id', $validated['product_id'])
+                ->where('id', '!=', $photo->id)
+                ->update(['profile' => 0]);
+        }
 
         $photo->update($validated);
 

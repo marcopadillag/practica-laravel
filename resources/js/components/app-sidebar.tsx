@@ -11,9 +11,10 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard, categories } from '@/routes';
+import products from '@/routes/products';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Tags } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Tags, Package } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -26,6 +27,11 @@ const mainNavItems: NavItem[] = [
         title: 'Categorías',
         href: categories(),
         icon: Tags,
+    },
+    {
+        title: 'Productos',
+        href: products.index(),
+        icon: Package,
     },
 ];
 

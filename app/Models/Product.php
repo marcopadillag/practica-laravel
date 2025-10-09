@@ -48,4 +48,12 @@ class Product extends Model
     {
         return $this->hasMany(Photo::class);
     }
+
+    /**
+     * Get the profile photo for the product (where profile = 1).
+     */
+    public function profilePhoto(): HasMany
+    {
+        return $this->hasMany(Photo::class)->where('profile', 1);
+    }
 }

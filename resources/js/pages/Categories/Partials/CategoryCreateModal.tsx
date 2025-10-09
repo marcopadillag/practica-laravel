@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm } from '@inertiajs/react';
+import { useForm, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,7 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Upload, Loader2, ImageIcon, UploadIcon } from 'lucide-react';
 import { store } from '@/routes/categories';
+import { categories } from '@/routes';
 import { Family, CategoryFormData } from '@/types';
+import { toast } from 'sonner';
 
 interface Props {
   open: boolean;
@@ -35,6 +37,10 @@ export default function CategoryCreateModal({ open, onOpenChange, families }: Pr
         reset();
         setLogoPreview(null);
         onOpenChange(false);
+        toast.success('Categoría creada exitosamente');
+      },
+      onError: () => {
+        toast.error('Error al crear la categoría');
       },
     });
   };

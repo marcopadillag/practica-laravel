@@ -1,7 +1,7 @@
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
-import { Category, Auth, PaginatedData, BreadcrumbItem } from '@/types';
+import { Category, Auth, PaginatedData, BreadcrumbItem, SharedData } from '@/types';
 import { DataTable } from '@/components/ui/data-table';
 import { createColumns } from './columns';
 import { Button } from '@/components/ui/button';
@@ -16,10 +16,6 @@ interface Props {
     auth: Auth;
     categories: PaginatedData<Category>;
     families: any[];
-    flash?: {
-        success?: string;
-        error?: string;
-    };
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -29,7 +25,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Index({ auth, categories, families, flash }: Props) {
+export default function Index({ auth, categories, families }: Props) {
+  const { flash } = usePage<SharedData>().props;
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -62,18 +59,7 @@ export default function Index({ auth, categories, families, flash }: Props) {
                                 </Button>
                             </div>
 
-                            {/* Flash Messages */}
-                            {flash?.success && (
-                                <Alert variant="default" className="mb-6">
-                                    <AlertDescription>{flash.success}</AlertDescription>
-                                </Alert>
-                            )}
-                            
-                            {flash?.error && (
-                                <Alert variant="destructive" className="mb-6">
-                                    <AlertDescription>{flash.error}</AlertDescription>
-                                </Alert>
-                            )}
+
 
                             {/* DataTable */}
                             <DataTable

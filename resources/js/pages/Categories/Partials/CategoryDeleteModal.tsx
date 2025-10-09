@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from '@inertiajs/react';
+import { useForm, router } from '@inertiajs/react';
 import { AlertTriangleIcon, TrashIcon, XIcon } from 'lucide-react';
 import {
   Dialog,
@@ -13,6 +13,8 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Category } from '@/types';
 import { destroy as destroyRoute } from '@/routes/categories';
+import { categories } from '@/routes';
+import { toast } from 'sonner';
 
 interface Props {
   open: boolean;
@@ -66,6 +68,10 @@ export default function CategoryDeleteModal({ open, onOpenChange, category }: Pr
         destroy(destroyRoute(category.id).url, {
             onSuccess: () => {
                 onOpenChange(false);
+                toast.success('Categoría eliminada exitosamente');
+            },
+            onError: () => {
+                toast.error('Error al eliminar la categoría');
             },
         });
     };

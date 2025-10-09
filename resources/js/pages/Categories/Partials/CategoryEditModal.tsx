@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useForm } from '@inertiajs/react';
-import { ImageIcon, UploadIcon } from 'lucide-react';
+import { useForm, router } from '@inertiajs/react';
+import { EditIcon, UploadIcon, XIcon, ImageIcon } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -20,8 +20,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import InputError from '@/components/input-error';
 import { Category, Family, CategoryFormData } from '@/types';
 import { update } from '@/routes/categories';
+import { categories } from '@/routes';
+import { toast } from 'sonner';
 
 interface Props {
   open: boolean;
@@ -56,16 +59,20 @@ export default function CategoryEditModal({ open, onOpenChange, category, famili
     e.preventDefault();
     
     const formData = new FormData();
-    formData.append('_method', 'PUT');
     formData.append('name', data.name);
     if (data.description) formData.append('description', data.description);
     if (data.logo) formData.append('logo', data.logo);
     if (data.family_id) formData.append('family_id', data.family_id.toString());
+    formData.append('_method', 'PUT');
 
-    post(update(category.id).url, {
+    router.post(update(category.id).url, formData, {
       forceFormData: true,
       onSuccess: () => {
         onOpenChange(false);
+        toast.success('Categoría actualizada exitosamente');
+      },
+      onError: () => {
+        toast.error('Error al actualizar la categoría');
       },
     });
   };

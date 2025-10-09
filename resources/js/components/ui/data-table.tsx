@@ -36,6 +36,12 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   searchKey?: string
   searchPlaceholder?: string
+  filterOptions?: {
+    filterKey: string
+    filterLabel: string
+    options: Array<{ value: string | number; label: string }>
+    currentValue?: string | number | null
+  }
   pagination?: {
     current_page: number
     last_page: number
@@ -50,6 +56,7 @@ export function DataTable<TData, TValue>({
   data,
   searchKey,
   searchPlaceholder = "Buscar...",
+  filterOptions,
   pagination,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -78,7 +85,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 gap-2">
         {searchKey && (
           <div className="relative flex-1 max-w-sm">
             <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -92,37 +99,73 @@ export function DataTable<TData, TValue>({
             />
           </div>
         )}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columnas <ChevronDownIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                // Obtener el texto del header
-                const headerText = typeof column.columnDef.header === 'string' 
-                  ? column.columnDef.header 
-                  : column.id
-                
-                return (
+        <div className="ml-auto flex items-center gap-2">
+          {filterOptions && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  {filterOptions.filterLabel} <ChevronDownIcon className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuCheckboxItem
+                  checked={!filterOptions.currentValue}
+                  onCheckedChange={() => {
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete(filterOptions.filterKey);
+                    router.get(url.pathname + url.search);
+                  }}
+                >
+                  Todas
+                </DropdownMenuCheckboxItem>
+                {filterOptions.options.map((option) => (
                   <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
+                    key={option.value}
+                    checked={String(filterOptions.currentValue) === String(option.value)}
+                    onCheckedChange={() => {
+                      const url = new URL(window.location.href);
+                      url.searchParams.set(filterOptions.filterKey, String(option.value));
+                      router.get(url.pathname + url.search);
+                    }}
                   >
-                    {headerText}
+                    {option.label}
                   </DropdownMenuCheckboxItem>
-                )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                Columnas <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  // Obtener el texto del header
+                  const headerText = typeof column.columnDef.header === 'string' 
+                    ? column.columnDef.header 
+                    : column.id
+                  
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {headerText}
+                    </DropdownMenuCheckboxItem>
+                  )
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

@@ -17,6 +17,10 @@ interface Props {
     auth: Auth;
     products: PaginatedData<Product>;
     families: Family[];
+    filters: {
+        search?: string;
+        family_id?: number | null;
+    };
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -26,7 +30,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Index({ auth, products: productsData, families }: Props) {
+export default function Index({ auth, products: productsData, families, filters }: Props) {
   const { flash } = usePage<SharedData>().props;
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -72,6 +76,15 @@ export default function Index({ auth, products: productsData, families }: Props)
                                 data={productsData.data}
                                 searchKey="name"
                                 searchPlaceholder="Buscar productos..."
+                                filterOptions={{
+                                    filterKey: 'family_id',
+                                    filterLabel: 'Familia',
+                                    options: families.map(family => ({
+                                        value: family.id,
+                                        label: family.name
+                                    })),
+                                    currentValue: filters.family_id
+                                }}
                                 pagination={{
                                     current_page: productsData.current_page,
                                     last_page: productsData.last_page,

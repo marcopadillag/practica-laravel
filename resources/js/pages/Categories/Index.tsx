@@ -67,6 +67,13 @@ export default function Index({ auth, categories, families }: Props) {
                                 data={categories.data}
                                 searchKey="name"
                                 searchPlaceholder="Buscar categorías..."
+                                pagination={{
+                                    current_page: categories.current_page,
+                                    last_page: categories.last_page,
+                                    per_page: categories.per_page,
+                                    total: categories.total,
+                                    links: categories.links,
+                                }}
                             />
                         </div>
                 </div>

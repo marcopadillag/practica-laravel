@@ -72,6 +72,13 @@ export default function Index({ auth, products: productsData, families }: Props)
                                 data={productsData.data}
                                 searchKey="name"
                                 searchPlaceholder="Buscar productos..."
+                                pagination={{
+                                    current_page: productsData.current_page,
+                                    last_page: productsData.last_page,
+                                    per_page: productsData.per_page,
+                                    total: productsData.total,
+                                    links: productsData.links,
+                                }}
                             />
                         </div>
                 </div>

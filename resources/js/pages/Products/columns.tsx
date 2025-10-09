@@ -114,7 +114,7 @@ export const createColumns = (
             const price = row.getValue("price") as string
             return (
                 <div className="font-medium">
-                    ${parseFloat(price).toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                    S/ {parseFloat(price).toLocaleString('es-ES', { minimumFractionDigits: 2 })}
                 </div>
             )
         },

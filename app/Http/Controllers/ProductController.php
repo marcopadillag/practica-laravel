@@ -263,12 +263,14 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        // Verificar si el producto tiene fotos asociadas
-        if ($product->photos()->count() > 0) {
-            return redirect()->route('products.index')
-                ->with('error', 'No se puede eliminar el producto porque tiene fotos asociadas.');
+        // Eliminar todas las fotos asociadas del storage
+        foreach ($product->photos as $photo) {
+            Storage::disk('public')->delete($photo->url_photo);
         }
-
+        
+        // Eliminar el producto (las fotos se eliminarán en cascada si está configurado,
+        // o manualmente si no)
+        $product->photos()->delete();
         $product->delete();
 
         return redirect()->route('products.index')
@@ -283,10 +285,10 @@ class ProductController extends Controller
         $photosCount = $product->photos()->count();
         
         return response()->json([
-            'canDelete' => $photosCount === 0,
+            'canDelete' => true,
             'photoCount' => $photosCount,
             'message' => $photosCount > 0 
-                ? "Este producto tiene {$photosCount} foto(s) asociada(s). No se puede eliminar."
+                ? "Este producto tiene {$photosCount} foto(s) asociada(s). Se eliminarán junto con el producto."
                 : null
         ]);
     }

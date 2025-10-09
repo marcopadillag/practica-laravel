@@ -12,6 +12,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { ChevronDownIcon, SearchIcon } from "lucide-react"
+import { router } from "@inertiajs/react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -35,6 +36,13 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   searchKey?: string
   searchPlaceholder?: string
+  pagination?: {
+    current_page: number
+    last_page: number
+    per_page: number
+    total: number
+    links: Array<{ url: string | null; label: string; active: boolean }>
+  }
 }
 
 export function DataTable<TData, TValue>({
@@ -42,6 +50,7 @@ export function DataTable<TData, TValue>({
   data,
   searchKey,
   searchPlaceholder = "Buscar...",
+  pagination,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -165,30 +174,67 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} de{" "}
-          {table.getFilteredRowModel().rows.length} fila(s) seleccionada(s).
+      {pagination ? (
+        <div className="flex items-center justify-between space-x-2 py-4">
+          <div className="flex-1 text-sm text-muted-foreground">
+            Mostrando {((pagination.current_page - 1) * pagination.per_page) + 1} a{" "}
+            {Math.min(pagination.current_page * pagination.per_page, pagination.total)} de{" "}
+            {pagination.total} resultado(s)
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const prevPage = pagination.links.find(link => link.label.includes('Previous') || link.label.includes('Anterior'));
+                if (prevPage?.url) router.get(prevPage.url);
+              }}
+              disabled={pagination.current_page === 1}
+            >
+              Anterior
+            </Button>
+            <span className="text-sm text-muted-foreground">
+              Página {pagination.current_page} de {pagination.last_page}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const nextPage = pagination.links.find(link => link.label.includes('Next') || link.label.includes('Siguiente'));
+                if (nextPage?.url) router.get(nextPage.url);
+              }}
+              disabled={pagination.current_page === pagination.last_page}
+            >
+              Siguiente
+            </Button>
+          </div>
         </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Anterior
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Siguiente
-          </Button>
+      ) : (
+        <div className="flex items-center justify-end space-x-2 py-4">
+          <div className="flex-1 text-sm text-muted-foreground">
+            {table.getFilteredSelectedRowModel().rows.length} de{" "}
+            {table.getFilteredRowModel().rows.length} fila(s) seleccionada(s).
+          </div>
+          <div className="space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Anterior
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Siguiente
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

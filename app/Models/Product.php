@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -52,8 +53,8 @@ class Product extends Model
     /**
      * Get the profile photo for the product (where profile = 1).
      */
-    public function profilePhoto(): HasMany
+    public function profilePhoto(): HasOne
     {
-        return $this->hasMany(Photo::class)->where('profile', 1);
+        return $this->hasOne(Photo::class)->where('profile', 1);
     }
 }

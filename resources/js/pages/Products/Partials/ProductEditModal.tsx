@@ -364,8 +364,7 @@ export default function ProductEditModal({ open, onOpenChange, product, families
                           {/* Badge de foto de perfil */}
                           {photo.isProfile && (
                             <div className="absolute top-1 left-1 bg-primary text-primary-foreground px-1.5 py-0.5 rounded text-[10px] font-medium flex items-center gap-0.5">
-                              <Star className="h-2.5 w-2.5 fill-current" />
-                              Perfil
+                              <Star className="h-4.5 w-2.5 fill-current" />
                             </div>
                           )}
                           

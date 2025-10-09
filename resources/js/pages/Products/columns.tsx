@@ -48,7 +48,8 @@ const ColumnActions = ({ product, onEdit, onDelete }: ColumnActionsProps) => {
 
 export const createColumns = (
     onEdit: (product: Product) => void,
-    onDelete: (product: Product) => void
+    onDelete: (product: Product) => void,
+    onViewPhotos?: (product: Product) => void
 ): ColumnDef<Product>[] => [
     {
         accessorKey: "code",
@@ -67,40 +68,19 @@ export const createColumns = (
         accessorKey: "profile_photo",
         header: "Fotos",
         cell: ({ row }) => {
-            const product = row.original
-            let profilePhoto = product.profile_photo
+            const photo = row.original.profile_photo;
+            const hasPhotos = row.original.photos && row.original.photos.length > 0;
             
-            // Si viene como array (no debería, pero por si acaso), tomar el primero
-            if (Array.isArray(profilePhoto)) {
-                profilePhoto = profilePhoto[0]
-            }
-            
-            const getImageUrl = (photoPath?: string | null) => {
-                if (!photoPath) return null
-                return `/storage/${photoPath}`
-            }
-            
-            const imageUrl = profilePhoto?.url_photo ? getImageUrl(profilePhoto.url_photo) : null
+            if (!photo) return <span className="text-muted-foreground">Sin foto</span>;
             
             return (
-                <div className="flex items-center justify-center w-12 h-12">
-                    {imageUrl ? (
-                        <img
-                            src={imageUrl}
-                            alt={`Foto de ${product.name}`}
-                            className="w-10 h-10 object-cover rounded"
-                            onError={(e) => {
-                                console.error('Error loading image:', profilePhoto?.url_photo)
-                                e.currentTarget.style.display = 'none'
-                            }}
-                        />
-                    ) : (
-                        <div className="w-10 h-10 bg-muted rounded flex items-center justify-center">
-                            <span className="text-xs text-muted-foreground">N/A</span>
-                        </div>
-                    )}
-                </div>
-            )
+                <img
+                    src={`/storage/${photo.url_photo}`}
+                    alt={row.getValue("name")}
+                    className="h-12 w-12 rounded object-cover cursor-pointer hover:opacity-80 transition-opacity"
+                    onClick={() => hasPhotos && onViewPhotos?.(row.original)}
+                />
+            );
         },
     },
     {

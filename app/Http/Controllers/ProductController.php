@@ -45,12 +45,9 @@ class ProductController extends Controller
         // Paginación
         $products = $query->paginate(10)->withQueryString();
         
-        // Agregar la foto de perfil a cada producto
+        // Agregar la foto de perfil a cada producto usando la relación profilePhoto
         $products->getCollection()->transform(function ($product) {
-            // La relación profilePhoto ya filtra por profile = 1
-            // Obtenemos solo el primer resultado como objeto, no como colección
-            $product->profile_photo = $product->photos()->where('profile', 1)->first();
-            
+            $product->profile_photo = $product->profilePhoto;
             return $product;
         });
         

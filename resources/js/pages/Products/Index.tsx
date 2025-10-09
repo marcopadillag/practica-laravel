@@ -10,6 +10,7 @@ import { Plus } from 'lucide-react';
 import ProductCreateModal from './Partials/ProductCreateModal';
 import ProductEditModal from './Partials/ProductEditModal';
 import ProductDeleteModal from './Partials/ProductDeleteModal';
+import ProductPhotoPreview from './Partials/ProductPhotoPreview';
 import { products } from '@/routes';
 
 interface Props {
@@ -30,6 +31,7 @@ export default function Index({ auth, products: productsData, families }: Props)
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const handleEdit = (product: Product) => {
@@ -42,7 +44,12 @@ export default function Index({ auth, products: productsData, families }: Props)
         setDeleteModalOpen(true);
     };
 
-    const columns = createColumns(handleEdit, handleDelete);
+    const handleViewPhotos = (product: Product) => {
+        setSelectedProduct(product);
+        setPreviewOpen(true);
+    };
+
+    const columns = createColumns(handleEdit, handleDelete, handleViewPhotos);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -89,6 +96,12 @@ export default function Index({ auth, products: productsData, families }: Props)
                         open={deleteModalOpen}
                         onOpenChange={setDeleteModalOpen}
                         product={selectedProduct}
+                    />
+                    <ProductPhotoPreview
+                        open={previewOpen}
+                        onOpenChange={setPreviewOpen}
+                        photos={selectedProduct.photos || []}
+                        initialIndex={0}
                     />
                 </>
             )}

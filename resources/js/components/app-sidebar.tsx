@@ -19,14 +19,14 @@ import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Productos',
-        href: products.index(),
-        icon: Package,
-    },
-    {
         title: 'Categorías',
         href: categories(),
         icon: Tags,
+    },
+    {
+        title: 'Productos',
+        href: products.index(),
+        icon: Package,
     },
 ];
 

@@ -10,7 +10,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard, categories } from '@/routes';
+import { categories } from '@/routes';
 import products from '@/routes/products';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
@@ -19,19 +19,14 @@ import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Inicio',
-        href: dashboard(),
-        icon: LayoutGrid,
+        title: 'Productos',
+        href: products.index(),
+        icon: Package,
     },
     {
         title: 'Categorías',
         href: categories(),
         icon: Tags,
-    },
-    {
-        title: 'Productos',
-        href: products.index(),
-        icon: Package,
     },
 ];
 
@@ -45,7 +40,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={products.index()} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

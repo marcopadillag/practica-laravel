@@ -17,12 +17,17 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::firstOrCreate(
-            ['email' => 'test@example.com'],
+            ['email' => 'marco@realisticnode.com'],
             [
-                'name' => 'Test User',
+                'name' => 'Marco',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ]
         );
+
+        // Seed families
+        $this->call([
+            FamilySeeder::class,
+        ]);
     }
 }
